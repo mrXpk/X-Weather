@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-Weather</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a2e">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+    <link rel="alternate icon" type="image/png" href="icons/favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+    <div class="theme-toggle">
+        <button id="theme-toggle-btn" aria-label="Toggle theme">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+    <div class="wrapper">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="search-container glass-card">
+                <input type="text" id="search-input" placeholder="Search for a city...">
+                <button class="location-btn" aria-label="Get current location">
+                    <i class="fas fa-location-dot"></i>
+                </button>
+                <button class="search-btn" aria-label="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="date-time">
+                <h2 id="time">12:00</h2>
+                <h3 id="date">Monday, 19 February</h3>
+            </div>
+            <div class="weather-info glass-card">
+                <img id="weather-icon" src="https://openweathermap.org/img/wn/01d@2x.png" alt="weather icon">
+                <div class="temperature-container">
+                    <h1 id="temperature">25°C</h1>
+                    <button id="unit-toggle" class="unit-toggle glass-button" title="Toggle temperature unit">
+                        <span class="unit-c active">°C</span>
+                        <span class="unit-divider">/</span>
+                        <span class="unit-f">°F</span>
+                    </button>
+                </div>
+                <p id="weather-desc">Clear Sky</p>
+                <h3 id="location">Biratnagar, NP</h3>
+            </div>
+            <div class="sun-info glass-card">
+                <div class="sun-row">
+                    <div class="sun-item">
+                        <i class="fas fa-sun"></i>
+                        <div class="sun-details">
+                            <p class="sun-label">Sunrise</p>
+                            <p id="sunrise-time">06:30 AM</p>
+                        </div>
+                    </div>
+                    <div class="sun-divider"></div>
+                    <div class="sun-item">
+                        <i class="fas fa-moon"></i>
+                        <div class="sun-details">
+                            <p class="sun-label">Sunset</p>
+                            <p id="sunset-time">06:30 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="weather-details">
+                <div class="detail-card">
+                    <i class="fas fa-temperature-half"></i>
+                    <div class="detail-info">
+                        <p class="detail-label">Feels Like</p>
+                        <p class="detail-value" id="feels-like">27°C</p>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-droplet"></i>
+                    <div class="detail-info">
+                        <p class="detail-label">Humidity</p>
+                        <p class="detail-value" id="humidity">65%</p>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-wind"></i>
+                    <div class="detail-info">
+                        <p class="detail-label">Wind Speed</p>
+                        <p class="detail-value" id="wind-speed">5.2 km/h</p>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-gauge"></i>
+                    <div class="detail-info">
+                        <p class="detail-label">Pressure</p>
+                        <p class="detail-value" id="pressure">1015 hPa</p>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-eye"></i>
+                    <div class="detail-info">
+                        <p class="detail-label">Visibility</p>
+                        <p class="detail-value" id="visibility">10 km</p>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-cloud"></i>
+                    <div class="detail-info">
+                        <p class="detail-label">Cloudiness</p>
+                        <p class="detail-value" id="cloudiness">20%</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Temperature Graph -->
+
+            <div class="temperature-graph glass-card">
+                <div class="graph-header">
+                    <h4>Hourly Forecast</h4>
+                    <div class="graph-toggles">
+                        <button class="graph-toggle active" data-type="temperature">Temperature</button>
+                        <button class="graph-toggle" data-type="humidity">Humidity</button>
+                        <button class="graph-toggle" data-type="rain">Rain</button>
+                    </div>
+                </div>
+                <canvas id="tempChart"></canvas>
+            </div>
+
+            <!-- 5-Day Forecast Section -->
+            <div class="forecast-section glass-card">
+                <div class="section-header">
+                    <div class="header-content">
+                        <h3>5-Day Forecast</h3>
+                        <i class="fas fa-calendar-days"></i>
+                    </div>
+                    <div class="header-divider"></div>
+                </div>
+                <div class="forecast-cards"></div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Install PWA Prompt -->
+    <div id="install-prompt" class="install-prompt glass-card" style="display: none;">
+        <p>Install Weather App for a better experience!</p>
+        <div class="install-buttons">
+            <button id="install-button" class="glass-button">Install</button>
+            <button id="close-prompt" class="glass-button">Maybe Later</button>
+        </div>
+    </div>
+    <!-- Developer Profile -->
+    <div class="developer-profile">
+        <a href="https://github.com/mrXpk" target="_blank" class="dev-link glass-card">
+            <i class="fab fa-github"></i>
+            <span>Meet the Developer</span>
+        </a>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
